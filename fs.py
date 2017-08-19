@@ -65,6 +65,13 @@ class filesystem:
         else:
             return self.path + "/" + self.filelist[fileIndex]
 
+    def get_dirpath(self, dirIndex):
+
+        if(len(self.subdir)==0):
+            return None
+        else:
+            return self.path + "/" + self.subdir[dirIndex]
+
     def refresh(self):
 
         self.filelist = [f for f in os.listdir(self.path) if

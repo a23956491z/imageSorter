@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter.ttk import *
 from PIL import Image,ImageTk
 from fs import picture,filesystem
-
+from settingGUI import settingFrame
 class mainFrame(Frame):
 
     def __init__(self, master = None):
@@ -29,7 +29,8 @@ class mainFrame(Frame):
                     0 else (0,0))
             i += 1
 
-        self.setting = Button(self.tab1, text = "setting")
+        self.setting = Button(self.tab1, text = "setting",
+                              command = self.open_setting)
         self.setting.grid(row = 1, column = 8, columnspan = 2)
         
         self.now_path = "C:/Users/a2395/Desktop/fortest"
@@ -86,6 +87,12 @@ class mainFrame(Frame):
                        ,padx = (2, 60), pady = (10, 10))
         else:
             self.panel["image"] = self.imageObj
+
+    def open_setting(self):
+
+        tl = Toplevel(self)
+        setting = settingFrame(tl)
+        setting.grab_set()
 
 if __name__ == "__main__":
     
