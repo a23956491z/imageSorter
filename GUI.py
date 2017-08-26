@@ -8,7 +8,9 @@ class mainFrame(Frame):
     def __init__(self, master = None):
         Frame.__init__(self, master)
 
+
         self.note = Notebook(master)
+        self.note.pack(padx = (10, 10), pady = (10, 10))
 
         self.tab1 = Frame(self.note)
         self.tab2 = Frame(self.note)
@@ -17,10 +19,10 @@ class mainFrame(Frame):
         self.note.add(self.tab1, text = "Tab One")
         self.note.add(self.tab2, text = "Tab Two")
         self.note.add(self.tab3, text = "Tab Three")
-        self.note.pack()
+
 
         self.buttonList = [Button(self.tab1, text =
-            "folder " + str(i+1), command = lambda idx = i :self.push_dir(idx)) for i in range(10) ]
+            "Empty", command = lambda idx = i :self.push_dir(idx)) for i in range(10) ]
         
 
         i = 0
@@ -32,9 +34,16 @@ class mainFrame(Frame):
         self.setting = Button(self.tab1, text = "setting",
                               command = self.open_setting)
         self.setting.grid(row = 1, column = 8, columnspan = 2)
-        
+       
+        self.refreshBut = Button(self.tab1, text = "refresh",
+                                 command = self.update)
+        self.refreshBut.grid(row = 1, column = 7, columnspan = 2)
+
         self.now_path = "C:/Users/a2395/Desktop/fortest"
         self.fs = filesystem(self.now_path, "jpg")
+
+        self.settingPath = self.now_path
+        self.settingFulldir = self.fs.fulldir
 
         self.set_pic(1)
 
@@ -53,9 +62,11 @@ class mainFrame(Frame):
 
     def dir_to_button(self, dirlist):
 
-        size = len(dirlist)
-        
-        for but, dir in zip(self.buttonList, dirlist):
+        tempdir = [i for i in dirlist]
+
+        for but in self.buttonList:
+            but["text"] = "Empty"
+        for but, dir in zip(self.buttonList, tempdir):
             but["text"] = dir[:9]
 
     def push_dir(self, idx):
@@ -88,10 +99,26 @@ class mainFrame(Frame):
         else:
             self.panel["image"] = self.imageObj
 
+    def update(self):
+        
+        self.fs.refresh()
+        self.now_path = self.fs.path
+
+        self.path["text"] = self.now_path 
+
+        self.filename["text"] = self.fs.filelist[0]
+
+        
+        self.list.delete(0, END)
+        
+        for file in self.fs.filelist:
+            self.list.insert(END, file) 
+
+        self.set_pic(0)
+
     def open_setting(self):
 
-        tl = Toplevel(self)
-        setting = settingFrame(tl)
+        setting = settingFrame(self)
         setting.grab_set()
 
 if __name__ == "__main__":

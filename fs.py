@@ -34,19 +34,28 @@ class picture:
         return self.image.size
 
 class filesystem:
-    def __init__(self, path, filenameExten = None):
+    def __init__(self, path, filenameExten = None, fulldirlist = None):
        
         self.path = path
+        self.fne = filenameExten
 
         self.filelist = [f for f in os.listdir(path) if
                 os.path.isfile(os.path.join(path, f))]
 
-        self.subdir = [f for f in os.listdir(path) if
-                os.path.isdir(os.path.join(path, f))]
-        
-        self.fne = filenameExten
+        if fulldirlist == None:
+            self.subdir = [f for f in os.listdir(path) if
+                    os.path.isdir(os.path.join(path, f))
+                    ]
+            self.fulldir = [self.get_dirpath(i) for i in range(len(self.subdir))]
+        else:
+            self.fulldir = fulldirlist
+            print (self.fulldir[0])
+            forre = ".+/(.+)$"
+            self.subdir = [(re.match(forre ,self.fulldir[i])).group(1) for i
+                     in range(len(self.fulldir))]
 
-        if filenameExten != None:
+
+        if self.fne != None:
             forRe = ".*\." + self.fne + "$" # like".*\.py$"
 
             self.filelist = [f for f in self.filelist if
@@ -55,7 +64,7 @@ class filesystem:
     def moveFile(self, fileIndex, dirIndex):
     
         oldfile = self.path + "/" + self.filelist[fileIndex]
-        newfile = self.path + "/" + self.subdir[dirIndex] + "/" + self.filelist[fileIndex]
+        newfile = self.fulldir[dirIndex] + "/" + self.filelist[fileIndex]
         shutil.move(oldfile, newfile)
 
     def get_filepath(self, fileIndex):
@@ -65,6 +74,7 @@ class filesystem:
         else:
             return self.path + "/" + self.filelist[fileIndex]
 
+    # It's function have some problem
     def get_dirpath(self, dirIndex):
 
         if(len(self.subdir)==0):
@@ -72,21 +82,35 @@ class filesystem:
         else:
             return self.path + "/" + self.subdir[dirIndex]
 
-    def refresh(self):
+    def refresh(self, dirlist = None):
 
         self.filelist = [f for f in os.listdir(self.path) if
                 os.path.isfile(os.path.join(self.path, f))]
 
-        self.subdir = [f for f in os.listdir(self.path) if
-                os.path.isdir(os.path.join(self.path, f))]
+        if self.fne != None:
+            forRe = ".*\." + self.fne + "$" # like".*\.py$"
+
+            self.filelist = [f for f in self.filelist if
+                re.match(forRe, f)  ]
+
+        if dirlist != None:
+            self.fulldir = dirlist
+
+            forre = ".+/(.+)$"
+            self.subdir = [re.match(forre ,self.fulldir[i]).group(1)
+                    for i in range(len(self.fulldir))
+                    if re.match(forre, self.fulldir[i])]
+
 
 # if __name__ == "__main__":
 
     # path = "C:/Users/a2395/Desktop/fortest"
 
-    # fs = filesystem(path = path, filenameExten = "txt")
+    # fulldir = ["C:/Users/a2395/Desktop/fortest/1" ,
+            # "C:/Users/a2395/Desktop/fortest/2","C:/Users/a2395/Desktop/fortest/3"]
 
-    # fs.moveFile(0, 0)
+    # fs = filesystem(path = path, filenameExten = "txt", fulldirlist = fulldir)
 
-    # print fs.filelist
-    # print fs.subdir
+    # print(fs.subdir)
+
+
