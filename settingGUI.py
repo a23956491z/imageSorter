@@ -46,6 +46,13 @@ class settingFrame(Toplevel):
             self.selectButList[i].grid(row = i + 2, column = 2,
                                        pady = (0,10), padx = (0,10))
 
+        self.keyButList = [Button(self, text = "Key : {0}".format(i + 1),
+            command = lambda idx = i : self.push_keyBut(idx)) for i in range(10)]
+        
+        for i in range(len(self.keyButList)):
+            self.keyButList[i].grid(row = i + 2, column = 3,
+                                    pady = (0,10), padx = (0,10))
+            
     def select_path(self):
 
         options = {'title' : "Select a directroy"}
@@ -100,7 +107,9 @@ class settingFrame(Toplevel):
         self.parent.fs.refresh(dirlist)
         self.parent.update()
 
+    def push_keyBut(self, idx):
 
+        pass
         
 
 if __name__ == "__main__":

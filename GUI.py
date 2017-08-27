@@ -3,6 +3,8 @@ from tkinter.ttk import *
 from PIL import Image,ImageTk
 from fs import picture,filesystem
 from settingGUI import settingFrame
+from pynput import keyboard
+
 class mainFrame(Frame):
 
     def __init__(self, master = None):
@@ -60,6 +62,8 @@ class mainFrame(Frame):
         for file in self.fs.filelist:
             self.list.insert(END, file) 
 
+        # self.bind("<Key>", self.key)
+        # self.bind("<Button-1>", self.callback)
     def dir_to_button(self, dirlist):
 
         tempdir = [i for i in dirlist]
@@ -121,6 +125,12 @@ class mainFrame(Frame):
         setting = settingFrame(self)
         setting.grab_set()
 
+    # def callback(self, event):
+        # self.focus_set()
+
+    # def key(self, event):
+        # self.path["text"] = ( "pressed" ,repr(event.char))
+    
 if __name__ == "__main__":
     
     root = Tk()
@@ -128,3 +138,4 @@ if __name__ == "__main__":
 
     mainwin.mainloop()
         
+    
