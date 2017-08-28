@@ -1,15 +1,24 @@
 from tkinter import *
 from tkinter.ttk import *
 from tkinter import filedialog
-from fs import filesystem
 from tkinter import messagebox
+
+from fs import filesystem
+
+from pynput import keyboard
 
 class settingFrame(Toplevel):
 
     def __init__(self, master = None):
         Toplevel.__init__(self, master)
-
         self.parent = master
+        
+        self.create_widget()
+
+        self.push_keyBut_sign = False
+        self.bind("<Key>", self.key)
+
+    def create_widget(self):
 
         self.autoloadBut = Button(self, text = "Auto Load",
                                   command = self.auto_load)
@@ -46,14 +55,15 @@ class settingFrame(Toplevel):
             self.selectButList[i].grid(row = i + 2, column = 2,
                                        pady = (0,10), padx = (0,10))
 
-        self.keyButList = [Button(self, text = "Key : {0}".format(i + 1),
+        self.keyButList = [Button(self, 
+            text = "Key : {0}".format(self.master.keybind[i]),
             command = lambda idx = i : self.push_keyBut(idx)) for i in range(10)]
-        self.keyButList[9]["text"] = "Key : 0"
         
         for i in range(len(self.keyButList)):
             self.keyButList[i].grid(row = i + 2, column = 3,
                                     pady = (0,10), padx = (0,10))
-            
+        
+
     def select_path(self):
 
         options = {'title' : "Select a directroy"}
@@ -94,6 +104,7 @@ class settingFrame(Toplevel):
         self.parent.fs.path = self.path
         self.parent.settingPath = self.path
 
+        
         dirlist = []
         for l in self.dirpathEntList:
             dirlist.append(l.get())
@@ -110,8 +121,19 @@ class settingFrame(Toplevel):
 
     def push_keyBut(self, idx):
 
-        pass
+        self.push_keyBut_sign = True
+        self.keyButIndex = idx
+        self.keyButList[idx]["text"] = "Press Key"
         
+    def key(self, event):
+        
+        if self.push_keyBut_sign:
+            self.push_keyBut_sign = False
+            now_key = event.keysym
+
+            self.master.keybind[self.keyButIndex] = now_key
+            self.keyButList[self.keyButIndex]["text"] = "Key : {0}".format(now_key)
+
 
 if __name__ == "__main__":
     

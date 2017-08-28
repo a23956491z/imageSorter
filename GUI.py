@@ -18,7 +18,6 @@ class mainFrame(Frame):
 
         self.settingPath = self.now_path
         self.settingFulldir = self.fs.fulldir
-        self.settingKeybind = self.keybind
 
         self.create_widget()
 
@@ -133,8 +132,7 @@ class mainFrame(Frame):
 
         self.path["text"] = self.now_path 
 
-        self.filename["text"] = self.fs.filelist[0]
-
+        self.filename["text"] = "" if self.fs.file_empty() else self.fs.filelist[0] 
         
         self.list.delete(0, END)
         
