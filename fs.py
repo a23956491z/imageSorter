@@ -62,10 +62,11 @@ class filesystem:
                   re.match(forRe, f)  ]
 
     def moveFile(self, fileIndex, dirIndex):
-    
-        oldfile = self.path + "/" + self.filelist[fileIndex]
-        newfile = self.fulldir[dirIndex] + "/" + self.filelist[fileIndex]
-        shutil.move(oldfile, newfile)
+   
+        if not(self.file_empty()):
+            oldfile = self.path + "/" + self.filelist[fileIndex]
+            newfile = self.fulldir[dirIndex] + "/" + self.filelist[fileIndex]
+            shutil.move(oldfile, newfile)
 
     def get_filepath(self, fileIndex):
 
@@ -101,6 +102,9 @@ class filesystem:
                     for i in range(len(self.fulldir))
                     if re.match(forre, self.fulldir[i])]
 
+    def file_empty(self):
+
+        return not(bool(len(self.filelist)))
 
 # if __name__ == "__main__":
 

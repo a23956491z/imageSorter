@@ -48,6 +48,7 @@ class settingFrame(Toplevel):
 
         self.keyButList = [Button(self, text = "Key : {0}".format(i + 1),
             command = lambda idx = i : self.push_keyBut(idx)) for i in range(10)]
+        self.keyButList[9]["text"] = "Key : 0"
         
         for i in range(len(self.keyButList)):
             self.keyButList[i].grid(row = i + 2, column = 3,
